@@ -279,6 +279,18 @@ public class AccountResponse extends BaseResponse implements ResourceLimitAndCou
     @Param(description = "the total object storage space (in GiB) available to the account", since = "4.21.0")
     private String objectStorageAvailable;
 
+    @SerializedName(ApiConstants.SHARED_GUEST_NETWORK_LIMIT)
+    @Param(description = "the total shared guest network the account can own", since = "4.21.0")
+    private Long sharedGuestNetworkLimit;
+
+    @SerializedName(ApiConstants.SHARED_GUEST_NETWORK_TOTAL)
+    @Param(description = "the total shared guest network owned by account", since = "4.21.0")
+    private Long sharedGuestNetworkTotal;
+
+    @SerializedName(ApiConstants.SHARED_GUEST_NETWORK_AVAILABLE)
+    @Param(description = "the total shared guest network available to the account", since = "4.21.0")
+    private Long sharedGuestNetworkAvailable;
+
     @SerializedName(ApiConstants.STATE)
     @Param(description = "the state of the account")
     private String state;
@@ -643,6 +655,21 @@ public class AccountResponse extends BaseResponse implements ResourceLimitAndCou
     @Override
     public void setObjectStorageAvailable(String objectStorageAvailable) {
         this.objectStorageAvailable = objectStorageAvailable;
+    }
+
+    @Override
+    public void setSharedGuestNetworkLimit(Long sharedGuestNetworkLimit) {
+        this.sharedGuestNetworkLimit = sharedGuestNetworkLimit;
+    }
+
+    @Override
+    public void setSharedGuestNetworkTotal(Long sharedGuestNetworkTotal) {
+        this.sharedGuestNetworkTotal = sharedGuestNetworkTotal;
+    }
+
+    @Override
+    public void setSharedGuestNetworkAvailable(Long sharedGuestNetworkAvailable) {
+        this.sharedGuestNetworkAvailable = sharedGuestNetworkAvailable;
     }
 
     public void setDefaultZone(String defaultZoneId) {

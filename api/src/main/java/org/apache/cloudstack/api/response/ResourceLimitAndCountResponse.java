@@ -108,6 +108,12 @@ public interface ResourceLimitAndCountResponse {
 
     void setObjectStorageAvailable(String objectStorageAvailable);
 
+    void setSharedGuestNetworkTotal(Long sharedGuestNetworkTotal);
+
+    void setSharedGuestNetworkLimit(Long sharedGuestNetworkLimit);
+
+    void setSharedGuestNetworkAvailable(Long sharedGuestNetworkAvailable);
+
     public void setTemplateLimit(String templateLimit);
 
     public void setTemplateTotal(Long templateTotal);

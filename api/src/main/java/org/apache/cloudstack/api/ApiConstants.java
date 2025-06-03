@@ -530,6 +530,9 @@ public class ApiConstants {
     public static final String USED_SUBNETS = "usedsubnets";
     public static final String USED_IOPS = "usediops";
     public static final String USER_DATA = "userdata";
+    public static final String SHARED_GUEST_NETWORK_LIMIT = "sharedguestnetworklimit";
+    public static final String SHARED_GUEST_NETWORK_TOTAL = "sharedguestnetworktotal";
+    public static final String SHARED_GUEST_NETWORK_AVAILABLE = "sharedguestnetworkavailable";
 
     public static final String USER_DATA_NAME = "userdataname";
     public static final String USER_DATA_ID = "userdataid";
