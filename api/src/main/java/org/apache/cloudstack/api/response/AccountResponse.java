@@ -281,7 +281,7 @@ public class AccountResponse extends BaseResponse implements ResourceLimitAndCou
 
     @SerializedName(ApiConstants.SHARED_GUEST_NETWORK_LIMIT)
     @Param(description = "the total shared guest network the account can own", since = "4.21.0")
-    private Long sharedGuestNetworkLimit;
+    private String sharedGuestNetworkLimit;
 
     @SerializedName(ApiConstants.SHARED_GUEST_NETWORK_TOTAL)
     @Param(description = "the total shared guest network owned by account", since = "4.21.0")
@@ -289,7 +289,7 @@ public class AccountResponse extends BaseResponse implements ResourceLimitAndCou
 
     @SerializedName(ApiConstants.SHARED_GUEST_NETWORK_AVAILABLE)
     @Param(description = "the total shared guest network available to the account", since = "4.21.0")
-    private Long sharedGuestNetworkAvailable;
+    private String sharedGuestNetworkAvailable;
 
     @SerializedName(ApiConstants.STATE)
     @Param(description = "the state of the account")
@@ -658,7 +658,7 @@ public class AccountResponse extends BaseResponse implements ResourceLimitAndCou
     }
 
     @Override
-    public void setSharedGuestNetworkLimit(Long sharedGuestNetworkLimit) {
+    public void setSharedGuestNetworkLimit(String sharedGuestNetworkLimit) {
         this.sharedGuestNetworkLimit = sharedGuestNetworkLimit;
     }
 
@@ -668,7 +668,7 @@ public class AccountResponse extends BaseResponse implements ResourceLimitAndCou
     }
 
     @Override
-    public void setSharedGuestNetworkAvailable(Long sharedGuestNetworkAvailable) {
+    public void setSharedGuestNetworkAvailable(String sharedGuestNetworkAvailable) {
         this.sharedGuestNetworkAvailable = sharedGuestNetworkAvailable;
     }
 
