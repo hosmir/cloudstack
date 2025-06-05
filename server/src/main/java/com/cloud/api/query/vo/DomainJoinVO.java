@@ -178,6 +178,12 @@ public class DomainJoinVO extends BaseViewVO implements InternalIdentity, Identi
     @Column(name = "objectStorageTotal")
     private Long objectStorageTotal;
 
+    @Column(name = "sharedGuestNetworkLimit")
+    private Long sharedGuestNetworkLimit;
+
+    @Column(name = "sharedGuestNetworkTotal")
+    private Long sharedGuestNetworkTotal;
+
     @Transient
     private String parentName;
 
@@ -578,6 +584,22 @@ public class DomainJoinVO extends BaseViewVO implements InternalIdentity, Identi
 
     public void setObjectStorageLimit(Long objectStorageLimit) {
         this.objectStorageLimit = objectStorageLimit;
+    }
+
+    public Long getSharedGuestNetworkLimit() {
+        return sharedGuestNetworkLimit;
+    }
+
+    public void setSharedGuestNetworkLimit(Long sharedGuestNetworkLimit) {
+        this.sharedGuestNetworkLimit = sharedGuestNetworkLimit;
+    }
+
+    public Long getSharedGuestNetworkTotal() {
+        return sharedGuestNetworkTotal;
+    }
+
+    public void setSharedGuestNetworkTotal(Long sharedGuestNetworkTotal) {
+        this.sharedGuestNetworkTotal = sharedGuestNetworkTotal;
     }
 
     public String getParentName() {

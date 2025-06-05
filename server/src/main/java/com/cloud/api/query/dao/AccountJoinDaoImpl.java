@@ -156,6 +156,26 @@ public class AccountJoinDaoImpl extends GenericDaoBase<AccountJoinVO, Long> impl
         response.setIpTotal(ipTotal);
         response.setIpAvailable(ipAvail);
 
+        long sharedGuestNetworkLimit = ApiDBUtils.findCorrectResourceLimit(account.getSharedGuestNetworkLimit(), account.getId(), ResourceType.shared_guest_network);
+        String sharedGuestNetworkLimitDisplay = (fullView || sharedGuestNetworkLimit == -1) ? Resource.UNLIMITED : String.valueOf(sharedGuestNetworkLimit);
+        long sharedGuestNetworkTotal = (account.getSharedGuestNetworkTotal() == null) ? 0 : account.getSharedGuestNetworkTotal();
+
+        Long sharedGuestNetworks = sharedGuestNetworkLimit - sharedGuestNetworkTotal;
+        // check how many free shared guest networks are left, and if it's less than max allowed number of shared guest
+        // networks from account - use this value
+        Long sharedGuestNetworksLeft = account.getSharedGuestNetworksFree();
+        unlimited = true;
+        if (sharedGuestNetworks.longValue() > sharedGuestNetworksLeft.longValue()) {
+            sharedGuestNetworks = sharedGuestNetworksLeft;
+            unlimited = false;
+        }
+
+        String sharedGuestNetworksAvailable = ((fullView || sharedGuestNetworkLimit == -1) && unlimited) ? Resource.UNLIMITED : String.valueOf(sharedGuestNetworks);
+
+        response.setSharedGuestNetworkLimit(sharedGuestNetworkLimitDisplay);
+        response.setSharedGuestNetworkTotal(sharedGuestNetworkTotal);
+        response.setSharedGuestNetworkAvailable(sharedGuestNetworksAvailable);
+
         long volumeLimit = ApiDBUtils.findCorrectResourceLimit(account.getVolumeLimit(), account.getId(), ResourceType.volume);
         String volumeLimitDisplay = (fullView || volumeLimit == -1) ? Resource.UNLIMITED : String.valueOf(volumeLimit);
         long volumeTotal = (account.getVolumeTotal() == null) ? 0 : account.getVolumeTotal();

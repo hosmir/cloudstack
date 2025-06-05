@@ -1371,6 +1371,14 @@ public enum Config {
                 "10",
                 "The default maximum number of projects that can be created for an account",
                 null),
+    DefaultMaxAccountSharedGuestNetworks(
+            "Account Defaults",
+            ManagementServer.class,
+            Long.class,
+            "max.account.shared.guest.networks",
+            "-1", // Set as infinite in order not to break backwards compatibility
+            "The default maximum number of shared guest networks that can be consumed by an account",
+            null),
 
     //disabling lb as cluster sync does not work with distributed cluster
     SubDomainNetworkAccess(

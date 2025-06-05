@@ -110,9 +110,9 @@ public interface ResourceLimitAndCountResponse {
 
     void setSharedGuestNetworkTotal(Long sharedGuestNetworkTotal);
 
-    void setSharedGuestNetworkLimit(Long sharedGuestNetworkLimit);
+    void setSharedGuestNetworkLimit(String sharedGuestNetworkLimit);
 
-    void setSharedGuestNetworkAvailable(Long sharedGuestNetworkAvailable);
+    void setSharedGuestNetworkAvailable(String sharedGuestNetworkAvailable);
 
     public void setTemplateLimit(String templateLimit);
 

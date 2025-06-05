@@ -36,6 +36,8 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.naming.ConfigurationException;
 
+import com.cloud.network.Network;
+import com.cloud.vm.dao.NicDao;
 import com.cloud.event.ActionEventUtils;
 import com.cloud.event.EventTypes;
 import com.cloud.utils.Ternary;
@@ -204,6 +206,8 @@ public class ResourceLimitManagerImpl extends ManagerBase implements ResourceLim
     DiskOfferingDao diskOfferingDao;
     @Inject
     BucketDao bucketDao;
+    @Inject
+    private NicDao _nicDao;
 
     protected GenericSearchBuilder<TemplateDataStoreVO, SumCount> templateSizeSearch;
     protected GenericSearchBuilder<SnapshotDataStoreVO, SumCount> snapshotSizeSearch;
@@ -303,6 +307,7 @@ public class ResourceLimitManagerImpl extends ManagerBase implements ResourceLim
             projectResourceLimitMap.put(Resource.ResourceType.backup_storage.name(), Long.parseLong(_configDao.getValue(BackupManager.DefaultMaxProjectBackupStorage.key())));
             projectResourceLimitMap.put(Resource.ResourceType.bucket.name(), Long.parseLong(_configDao.getValue(BucketApiService.DefaultMaxProjectBuckets.key())));
             projectResourceLimitMap.put(Resource.ResourceType.object_storage.name(), Long.parseLong(_configDao.getValue(BucketApiService.DefaultMaxProjectObjectStorage.key())));
+            projectResourceLimitMap.put(Resource.ResourceType.shared_guest_network.name(), Long.parseLong(_configDao.getValue(Config.DefaultMaxAccountSharedGuestNetworks.key())));
 
             accountResourceLimitMap.put(Resource.ResourceType.public_ip.name(), Long.parseLong(_configDao.getValue(Config.DefaultMaxAccountPublicIPs.key())));
             accountResourceLimitMap.put(Resource.ResourceType.snapshot.name(), Long.parseLong(_configDao.getValue(Config.DefaultMaxAccountSnapshots.key())));
@@ -320,6 +325,7 @@ public class ResourceLimitManagerImpl extends ManagerBase implements ResourceLim
             accountResourceLimitMap.put(Resource.ResourceType.backup_storage.name(), Long.parseLong(_configDao.getValue(BackupManager.DefaultMaxAccountBackupStorage.key())));
             accountResourceLimitMap.put(Resource.ResourceType.bucket.name(), Long.parseLong(_configDao.getValue(BucketApiService.DefaultMaxAccountBuckets.key())));
             accountResourceLimitMap.put(Resource.ResourceType.object_storage.name(), Long.parseLong(_configDao.getValue(BucketApiService.DefaultMaxAccountObjectStorage.key())));
+            accountResourceLimitMap.put(Resource.ResourceType.shared_guest_network.name(), Long.parseLong(_configDao.getValue(Config.DefaultMaxAccountSharedGuestNetworks.key())));
 
             domainResourceLimitMap.put(Resource.ResourceType.public_ip.name(), Long.parseLong(_configDao.getValue(Config.DefaultMaxDomainPublicIPs.key())));
             domainResourceLimitMap.put(Resource.ResourceType.snapshot.name(), Long.parseLong(_configDao.getValue(Config.DefaultMaxDomainSnapshots.key())));
@@ -337,6 +343,7 @@ public class ResourceLimitManagerImpl extends ManagerBase implements ResourceLim
             domainResourceLimitMap.put(Resource.ResourceType.backup_storage.name(), Long.parseLong(_configDao.getValue(BackupManager.DefaultMaxDomainBackupStorage.key())));
             domainResourceLimitMap.put(Resource.ResourceType.bucket.name(), Long.parseLong(_configDao.getValue(BucketApiService.DefaultMaxDomainBuckets.key())));
             domainResourceLimitMap.put(Resource.ResourceType.object_storage.name(), Long.parseLong(_configDao.getValue(BucketApiService.DefaultMaxDomainObjectStorage.key())));
+            domainResourceLimitMap.put(Resource.ResourceType.shared_guest_network.name(), Long.parseLong(_configDao.getValue(Config.DefaultMaxAccountSharedGuestNetworks.key())));
         } catch (NumberFormatException e) {
             logger.error("NumberFormatException during configuration", e);
             throw new ConfigurationException("Configuration failed due to NumberFormatException, see log for the stacktrace");
@@ -1311,6 +1318,8 @@ public class ResourceLimitManagerImpl extends ManagerBase implements ResourceLim
             newCount = bucketDao.countBucketsForAccount(accountId);
         } else if (type == ResourceType.object_storage) {
             newCount = bucketDao.calculateObjectStorageAllocationForAccount(accountId);
+        } else if (type == ResourceType.shared_guest_network) {
+            newCount = _nicDao.countByAccountAndNetworkGuestType(accountId, Network.GuestType.Shared);
         } else {
             throw new InvalidParameterValueException("Unsupported resource type " + type);
         }

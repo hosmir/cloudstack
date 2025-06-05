@@ -478,6 +478,7 @@ public class ViewResponseHelper {
         resourceLimitMap.put(Resource.ResourceType.backup_storage, domainJoinVO.getBackupStorageLimit());
         resourceLimitMap.put(Resource.ResourceType.bucket, domainJoinVO.getBucketLimit());
         resourceLimitMap.put(Resource.ResourceType.object_storage, domainJoinVO.getObjectStorageLimit());
+        resourceLimitMap.put(Resource.ResourceType.shared_guest_network, domainJoinVO.getSharedGuestNetworkLimit());
     }
 
     private static void copyResourceLimitsFromMap(Map<Resource.ResourceType, Long> resourceLimitMap, DomainJoinVO domainJoinVO){
@@ -497,6 +498,7 @@ public class ViewResponseHelper {
         domainJoinVO.setBackupStorageLimit(resourceLimitMap.get(Resource.ResourceType.backup_storage));
         domainJoinVO.setBucketLimit(resourceLimitMap.get(Resource.ResourceType.bucket));
         domainJoinVO.setObjectStorageLimit(resourceLimitMap.get(Resource.ResourceType.object_storage));
+        domainJoinVO.setSharedGuestNetworkLimit(resourceLimitMap.get(Resource.ResourceType.shared_guest_network));
     }
 
     private static void setParentResourceLimitIfNeeded(Map<Resource.ResourceType, Long> resourceLimitMap, DomainJoinVO domainJoinVO, List<DomainJoinVO> domainsCopy) {
@@ -519,6 +521,7 @@ public class ViewResponseHelper {
             Long backupStorageLimit = resourceLimitMap.get(Resource.ResourceType.backup_storage);
             Long bucketLimit = resourceLimitMap.get(Resource.ResourceType.bucket);
             Long objectStorageLimit = resourceLimitMap.get(Resource.ResourceType.object_storage);
+            Long sharedGuestNetworkLimit = resourceLimitMap.get(Resource.ResourceType.shared_guest_network);
 
             if (vmLimit == null) {
                 vmLimit = parentDomainJoinVO.getVmLimit();
@@ -583,6 +586,10 @@ public class ViewResponseHelper {
             if (objectStorageLimit == null) {
                 objectStorageLimit = parentDomainJoinVO.getObjectStorageLimit();
                 resourceLimitMap.put(Resource.ResourceType.object_storage, objectStorageLimit);
+            }
+            if (sharedGuestNetworkLimit == null) {
+                sharedGuestNetworkLimit = parentDomainJoinVO.getSharedGuestNetworkLimit();
+                resourceLimitMap.put(Resource.ResourceType.object_storage, sharedGuestNetworkLimit);
             }
             //-- try till parent present
             if (parentDomainJoinVO.getParent() != null && parentDomainJoinVO.getParent() != Domain.ROOT_DOMAIN) {

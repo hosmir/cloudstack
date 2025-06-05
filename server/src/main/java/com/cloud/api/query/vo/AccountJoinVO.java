@@ -201,6 +201,12 @@ public class AccountJoinVO extends BaseViewVO implements InternalIdentity, Ident
     @Column(name = "objectStorageTotal")
     private Long objectStorageTotal;
 
+    @Column(name = "sharedGuestNetworkLimit")
+    private Long sharedGuestNetworkLimit;
+
+    @Column(name = "sharedGuestNetworkTotal")
+    private Long sharedGuestNetworkTotal;
+
     @Column(name = "job_id")
     private Long jobId;
 
@@ -435,6 +441,14 @@ public class AccountJoinVO extends BaseViewVO implements InternalIdentity, Ident
 
     public Long getObjectStorageLimit() {
         return objectStorageLimit;
+    }
+
+    public Long getSharedGuestNetworkTotal() {
+        return sharedGuestNetworkTotal;
+    }
+
+    public Long getSharedGuestNetworkLimit() {
+        return sharedGuestNetworkLimit;
     }
 
     public Long getJobId() {

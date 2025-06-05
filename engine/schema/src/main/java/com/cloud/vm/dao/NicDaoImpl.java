@@ -23,6 +23,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import com.cloud.network.Network;
+import com.cloud.network.dao.NetworkDao;
+import com.cloud.network.dao.NetworkVO;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.stereotype.Component;
 
@@ -48,9 +51,14 @@ public class NicDaoImpl extends GenericDaoBase<NicVO, Long> implements NicDao {
     private GenericSearchBuilder<NicVO, Integer> deviceIdSearch;
     private GenericSearchBuilder<NicVO, Integer> CountByForNonStoppedVms;
     private SearchBuilder<NicVO> PeerRouterSearch;
+    private SearchBuilder<NicVO> CountByAccountAndGuestTypeSearch;
 
     @Inject
     VMInstanceDao _vmDao;
+    @Inject
+    NetworkDao _networkDao;
+    @Inject
+    UserVmDao _userVmDao;
 
     public NicDaoImpl() {
 
@@ -109,6 +117,16 @@ public class NicDaoImpl extends GenericDaoBase<NicVO, Long> implements NicDao {
         PeerRouterSearch.and("macAddress", PeerRouterSearch.entity().getMacAddress(), Op.EQ);
         PeerRouterSearch.and("vmType", PeerRouterSearch.entity().getVmType(), Op.EQ);
         PeerRouterSearch.done();
+
+        CountByAccountAndGuestTypeSearch = createSearchBuilder();
+        CountByAccountAndGuestTypeSearch.and("removed", CountByAccountAndGuestTypeSearch.entity().getRemoved(), Op.NULL);
+        SearchBuilder<NetworkVO> networkSearch = _networkDao.createSearchBuilder();
+        networkSearch.and("guestType", networkSearch.entity().getGuestType(), Op.EQ);
+        CountByAccountAndGuestTypeSearch.join("network", networkSearch, networkSearch.entity().getId(), CountByAccountAndGuestTypeSearch.entity().getNetworkId(), JoinBuilder.JoinType.INNER);
+        SearchBuilder<VMInstanceVO> vmInstanceSearch = _vmDao.createSearchBuilder();
+        vmInstanceSearch.and("accountId", vmInstanceSearch.entity().getAccountId(), Op.EQ);
+        CountByAccountAndGuestTypeSearch.join("vmInstance", vmInstanceSearch, vmInstanceSearch.entity().getId(), CountByAccountAndGuestTypeSearch.entity().getInstanceId(), JoinBuilder.JoinType.INNER);
+        CountByAccountAndGuestTypeSearch.done();
     }
 
     @Override
@@ -404,6 +422,14 @@ public class NicDaoImpl extends GenericDaoBase<NicVO, Long> implements NicDao {
         SearchCriteria<NicVO> sc = AllFieldsSearch.create();
         sc.setParameters("macAddress", macAddress);
         return findOneBy(sc);
+    }
+
+    @Override
+    public long countByAccountAndNetworkGuestType(long accountId, Network.GuestType guestType) {
+        SearchCriteria<NicVO> sc = CountByAccountAndGuestTypeSearch.create();
+        sc.setJoinParameters("network", "guestType", guestType);
+        sc.setJoinParameters("vmInstance", "accountId", accountId);
+        return listBy(sc).size();
     }
 
     @Override

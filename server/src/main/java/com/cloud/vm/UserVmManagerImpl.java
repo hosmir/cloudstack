@@ -243,6 +243,7 @@ import com.cloud.exception.ResourceUnavailableException;
 import com.cloud.exception.StorageUnavailableException;
 import com.cloud.exception.UnsupportedServiceException;
 import com.cloud.exception.VirtualMachineMigrationException;
+import com.cloud.exception.AccountLimitException;
 import com.cloud.gpu.GPU;
 import com.cloud.ha.HighAvailabilityManager;
 import com.cloud.host.Host;
@@ -1422,7 +1423,7 @@ public class UserVmManagerImpl extends ManagerBase implements UserVmManager, Vir
 
     @Override
     @ActionEvent(eventType = EventTypes.EVENT_NIC_CREATE, eventDescription = "Creating Nic", async = true)
-    public UserVm addNicToVirtualMachine(AddNicToVMCmd cmd) throws InvalidParameterValueException, PermissionDeniedException, CloudRuntimeException {
+    public UserVm addNicToVirtualMachine(AddNicToVMCmd cmd) throws InvalidParameterValueException, PermissionDeniedException, CloudRuntimeException, ResourceAllocationException {
         Long vmId = cmd.getVmId();
         Long networkId = cmd.getNetworkId();
         String ipAddress = cmd.getIpAddress();
@@ -1497,6 +1498,10 @@ public class UserVmManagerImpl extends ManagerBase implements UserVmManager, Vir
         }
 
         setNicAsDefaultIfNeeded(vmInstance, profile);
+
+        if (network.getGuestType() == Network.GuestType.Shared) {
+            _resourceLimitMgr.checkResourceLimit(vmOwner, ResourceType.shared_guest_network, 1);
+        }
 
         NicProfile guestNic = null;
         boolean cleanUp = true;

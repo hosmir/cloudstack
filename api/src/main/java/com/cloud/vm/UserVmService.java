@@ -124,7 +124,7 @@ public interface UserVmService {
      * @param cmd the command object that defines the vm and the given network
      * @return the vm object if successful, null otherwise
      */
-    UserVm addNicToVirtualMachine(AddNicToVMCmd cmd);
+    UserVm addNicToVirtualMachine(AddNicToVMCmd cmd) throws ResourceAllocationException;
 
     /**
      * Removes a NIC on the given network from the virtual machine

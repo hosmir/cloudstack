@@ -135,6 +135,14 @@ public class DomainJoinDaoImpl extends GenericDaoBase<DomainJoinVO, Long> implem
         response.setIpTotal(ipTotal);
         response.setIpAvailable(ipAvail);
 
+        long sharedGuestNetworkLimit = ApiDBUtils.findCorrectResourceLimitForDomain(domain.getSharedGuestNetworkLimit(), ResourceType.shared_guest_network, domain.getId());
+        String sharedGuestNetworkLimitDisplay = (fullView || ipLimit == -1) ? Resource.UNLIMITED : String.valueOf(sharedGuestNetworkLimit);
+        long sharedGuestNetworkTotal = (domain.getSharedGuestNetworkTotal() == null) ? 0 : domain.getSharedGuestNetworkTotal();
+        String sharedGuestNetworksAvailable = (fullView || sharedGuestNetworkLimit == -1) ? Resource.UNLIMITED : String.valueOf(sharedGuestNetworkLimit - sharedGuestNetworkTotal);
+        response.setSharedGuestNetworkLimit(sharedGuestNetworkLimitDisplay);
+        response.setSharedGuestNetworkTotal(sharedGuestNetworkTotal);
+        response.setSharedGuestNetworkAvailable(sharedGuestNetworksAvailable);
+
         long volumeLimit = ApiDBUtils.findCorrectResourceLimitForDomain(domain.getVolumeLimit(), ResourceType.volume, domain.getId());
         String volumeLimitDisplay = (fullView || volumeLimit == -1) ? Resource.UNLIMITED : String.valueOf(volumeLimit);
         long volumeTotal = (domain.getVolumeTotal() == null) ? 0 : domain.getVolumeTotal();

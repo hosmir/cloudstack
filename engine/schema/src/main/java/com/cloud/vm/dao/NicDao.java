@@ -19,6 +19,7 @@ package com.cloud.vm.dao;
 import java.net.URI;
 import java.util.List;
 
+import com.cloud.network.Network;
 import com.cloud.utils.db.GenericDao;
 import com.cloud.vm.NicVO;
 import com.cloud.vm.VirtualMachine;
@@ -92,6 +93,8 @@ public interface NicDao extends GenericDao<NicVO, Long> {
     List<NicVO> listByVmIdAndKeyword(long instanceId, String keyword);
 
     NicVO findByMacAddress(String macAddress);
+
+    long countByAccountAndNetworkGuestType(long accountId, Network.GuestType guestType);
 
     NicVO findByNetworkIdAndMacAddressIncludingRemoved(long networkId, String mac);
 
