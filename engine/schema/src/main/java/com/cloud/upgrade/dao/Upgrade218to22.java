@@ -1541,6 +1541,7 @@ public class Upgrade218to22 extends DbUpgradeAbstractImpl {
         upgradeDomainResourceCounts(conn, ResourceType.snapshot);
         upgradeDomainResourceCounts(conn, ResourceType.template);
         upgradeDomainResourceCounts(conn, ResourceType.public_ip);
+        upgradeDomainResourceCounts(conn, ResourceType.shared_guest_network);
     }
 
     public static void upgradeDomainResourceCounts(Connection conn, ResourceType resourceType) {

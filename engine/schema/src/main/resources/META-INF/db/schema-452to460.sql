@@ -64,6 +64,8 @@ CREATE VIEW `cloud`.`domain_view` AS
         primary_storage_count.count primaryStorageTotal,
         secondary_storage_limit.max secondaryStorageLimit,
         secondary_storage_count.count secondaryStorageTotal
+--         shared_guest_network_limit.max sharedGuestNetworkLimit,
+--         shared_guest_network_count.count sharedGuestNetworkTotal
     from
         `cloud`.`domain`
             left join
@@ -133,6 +135,12 @@ CREATE VIEW `cloud`.`domain_view` AS
         `cloud`.`resource_count` primary_storage_count ON domain.id = primary_storage_count.domain_id
             and primary_storage_count.type = 'primary_storage'
             left join
+--         `cloud`.`resource_limit` shared_guest_network_limit ON domain.id = shared_guest_network_limit.domain_id
+--             and shared_guest_network_limit.type = 'shared_guest_network'
+--             left join
+--         `cloud`.`resource_count` shared_guest_network_count ON domain.id = shared_guest_network_count.domain_id
+--             and shared_guest_network_count.type = 'shared_guest_network_count'
+--             left join
         `cloud`.`resource_limit` secondary_storage_limit ON domain.id = secondary_storage_limit.domain_id
             and secondary_storage_limit.type = 'secondary_storage'
             left join
@@ -150,6 +158,7 @@ INSERT IGNORE INTO `cloud`.`configuration` VALUES ('Domain Defaults', 'DEFAULT',
 INSERT IGNORE INTO `cloud`.`configuration` VALUES ('Domain Defaults', 'DEFAULT', 'management-server', 'max.domain.memory', '-1', 'The default maximum memory (in MiB) that can be used for a domain', '-1', NULL, NULL, 0);
 INSERT IGNORE INTO `cloud`.`configuration` VALUES ('Domain Defaults', 'DEFAULT', 'management-server', 'max.domain.primary.storage', '-1', 'The default maximum primary storage space (in GiB) that can be used for a domain', '-1', NULL, NULL, 0);
 INSERT IGNORE INTO `cloud`.`configuration` VALUES ('Domain Defaults', 'DEFAULT', 'management-server', 'max.domain.secondary.storage', '-1', 'The default maximum secondary storage space (in GiB) that can be used for a domain', '-1', NULL, NULL, 0);
+-- INSERT IGNORE INTO `cloud`.`configuration` VALUES ('Domain Defaults', 'DEFAULT', 'management-server', 'max.domain.shared_guest_network', '-1', 'The default maximum shared guest networks that can be used for a domain', '-1', NULL, NULL, 0);
 
 ALTER TABLE `cloud`.`vm_instance` ADD COLUMN `user_id` bigint unsigned NOT NULL DEFAULT 1 COMMENT 'user id of VM deployer';
 

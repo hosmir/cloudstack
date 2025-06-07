@@ -163,7 +163,7 @@ public class AccountJoinDaoImpl extends GenericDaoBase<AccountJoinVO, Long> impl
         Long sharedGuestNetworks = sharedGuestNetworkLimit - sharedGuestNetworkTotal;
         // check how many free shared guest networks are left, and if it's less than max allowed number of shared guest
         // networks from account - use this value
-        Long sharedGuestNetworksLeft = account.getSharedGuestNetworksFree();
+        Long sharedGuestNetworksLeft = account.getSharedGuestNetworkFree();
         unlimited = true;
         if (sharedGuestNetworks.longValue() > sharedGuestNetworksLeft.longValue()) {
             sharedGuestNetworks = sharedGuestNetworksLeft;

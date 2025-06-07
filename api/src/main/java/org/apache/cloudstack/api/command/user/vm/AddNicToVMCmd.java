@@ -22,6 +22,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.cloud.exception.ResourceAllocationException;
 import org.apache.cloudstack.acl.SecurityChecker.AccessType;
 import org.apache.cloudstack.api.ACL;
 import org.apache.cloudstack.api.APICommand;
@@ -166,7 +167,7 @@ public class AddNicToVMCmd extends BaseAsyncCmd implements UserCmd {
     }
 
     @Override
-    public void execute() {
+    public void execute() throws ResourceAllocationException {
         CallContext.current().setEventDetails("Vm Id: " + this._uuidMgr.getUuid(VirtualMachine.class, getVmId()) + " Network Id: " + this._uuidMgr.getUuid(Network.class, getNetworkId()));
         UserVm result = _userVmService.addNicToVirtualMachine(this);
         ArrayList<VMDetails> dc = new ArrayList<VMDetails>();

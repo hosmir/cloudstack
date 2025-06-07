@@ -23,6 +23,7 @@ import com.cloud.utils.exception.CloudRuntimeException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -116,6 +117,48 @@ public class Upgrade42010to42100 extends DbUpgradeAbstractImpl implements DbUpgr
         } catch (SQLException e) {
             logger.error("Failed to migrate existing configuration scope values to bitmask", e);
             throw new CloudRuntimeException(String.format("Failed to migrate existing configuration scope values to bitmask due to: %s", e.getMessage()));
+        }
+    }
+
+    private void upgradeSharedGuestNetworkCount(Connection conn) {
+        logger.debug("upgradeSharedGuestNetworkCount start");
+
+        // This query gets count of distinct SHARED guest networks per (account_id, domain_id)
+        String sqlSharedNetworksPerAccount =
+                "SELECT vm.account_id, vm.domain_id, COUNT(DISTINCT n.id) AS shared_network_count " +
+                        "FROM `cloud`.`vm_instance` vm " +
+                        "JOIN `cloud`.`nics` nic ON vm.id = nic.instance_id " +
+                        "JOIN `cloud`.`network` n ON nic.network_id = n.id " +
+                        "WHERE vm.vm_type = 'User' AND vm.removed IS NULL " +
+                        "AND n.guest_type = 'Shared' AND n.removed IS NULL " +
+                        "GROUP BY vm.account_id, vm.domain_id";
+
+        try (
+                PreparedStatement pstmtSharedNetworks = conn.prepareStatement(sqlSharedNetworksPerAccount);
+                ResultSet rs = pstmtSharedNetworks.executeQuery();
+        ) {
+            while (rs.next()) {
+                long accountId = rs.getLong("account_id");
+                long domainId = rs.getLong("domain_id");
+                long sharedNetworkCount = rs.getLong("shared_network_count");
+
+                upgradeResourceCountforAccount(conn, accountId, domainId, "shared_guest_network", sharedNetworkCount);
+            }
+            logger.debug("upgradeSharedGuestNetworkCount finish");
+        } catch (SQLException e) {
+            throw new CloudRuntimeException("Unable to upgrade shared_guest_network resource count", e);
+        }
+    }
+
+    private static void upgradeResourceCountforAccount(Connection conn, Long accountId, Long domainId, String type, Long resourceCount) throws SQLException {
+        //update or insert into resource_count table.
+        String sqlInsertResourceCount = "INSERT INTO `cloud`.`resource_count` (account_id, type, count) VALUES (?,?,?) ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id), count=?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sqlInsertResourceCount);) {
+            pstmt.setLong(1, accountId);
+            pstmt.setString(2, type);
+            pstmt.setLong(3, resourceCount);
+            pstmt.setLong(4, resourceCount);
+            pstmt.executeUpdate();
         }
     }
 }

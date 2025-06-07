@@ -65,8 +65,8 @@ select
     `backup_storage_count`.`count` AS `backupStorageTotal`,
     `bucket_limit`.`max` AS `bucketLimit`,
     `bucket_count`.`count` AS `bucketTotal`,
-    `shared_guest_network_total`.`max` AS `sharedGuestNetworkTotal`,
-    `shared_guest_network_limit`.`count` AS `sharedGuestNetworkLimit`,
+    `shared_guest_network_limit`.`max` AS `sharedGuestNetworkLimit`,
+    `shared_guest_network_count`.`count` AS `sharedGuestNetworkTotal`,
     `object_storage_limit`.`max` AS `objectStorageLimit`,
     `object_storage_count`.`count` AS `objectStorageTotal`
 from
@@ -162,11 +162,11 @@ from
     `cloud`.`resource_count` bucket_count ON domain.id = bucket_count.domain_id
         and bucket_count.type = 'bucket'
         left join
-    `cloud`.`resource_count` guest_shared_network_count ON account.id = guest_shared_network_count.account_id
-        and guest_shared_network_count.type = 'guest_shared_network'
+    `cloud`.`resource_count` shared_guest_network_count ON domain.id = shared_guest_network_count.account_id
+        and shared_guest_network_count.type = 'guest_shared_network'
         left join
-    `cloud`.`resource_limit` guest_shared_network_limit ON account.id = guest_shared_network_limit.account_id
-        and guest_shared_network_limit.type = 'guest_shared_network'
+    `cloud`.`resource_limit` shared_guest_network_limit ON domain.id = shared_guest_network_limit.account_id
+        and shared_guest_network_limit.type = 'guest_shared_network'
         left join
     `cloud`.`resource_limit` object_storage_limit ON domain.id = object_storage_limit.domain_id
         and object_storage_limit.type = 'object_storage'

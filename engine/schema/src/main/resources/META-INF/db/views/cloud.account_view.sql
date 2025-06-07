@@ -76,8 +76,8 @@ select
     `bucket_count`.`count` AS `bucketTotal`,
     `object_storage_limit`.`max` AS `objectStorageLimit`,
     `object_storage_count`.`count` AS `objectStorageTotal`,
-    `shared_guest_network_total`.`max` AS `sharedGuestNetworkTotal`,
-    `shared_guest_network_limit`.`count` AS `sharedGuestNetworkLimit`,
+    `shared_guest_network_limit`.`max` AS `sharedGuestNetworkLimit`,
+    `shared_guest_network_count`.`count` AS `sharedGuestNetworkTotal`,
     `async_job`.`id` AS `job_id`,
     `async_job`.`uuid` AS `job_uuid`,
     `async_job`.`job_status` AS `job_status`,
@@ -185,11 +185,11 @@ from
     `cloud`.`resource_limit` bucket_limit ON account.id = bucket_limit.account_id
         and bucket_limit.type = 'bucket'
         left join
-    `cloud`.`resource_count` guest_shared_network_count ON account.id = guest_shared_network_count.account_id
-        and guest_shared_network_count.type = 'guest_shared_network'
+    `cloud`.`resource_count` shared_guest_network_count ON domain.id = shared_guest_network_count.account_id
+        and shared_guest_network_count.type = 'guest_shared_network'
         left join
-    `cloud`.`resource_limit` guest_shared_network_limit ON account.id = guest_shared_network_limit.account_id
-        and guest_shared_network_limit.type = 'guest_shared_network'
+    `cloud`.`resource_limit` shared_guest_network_limit ON domain.id = shared_guest_network_limit.account_id
+        and shared_guest_network_limit.type = 'guest_shared_network'
         left join
     `cloud`.`resource_count` bucket_count ON account.id = bucket_count.account_id
         and bucket_count.type = 'bucket'

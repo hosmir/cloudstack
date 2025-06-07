@@ -207,6 +207,9 @@ public class AccountJoinVO extends BaseViewVO implements InternalIdentity, Ident
     @Column(name = "sharedGuestNetworkTotal")
     private Long sharedGuestNetworkTotal;
 
+    @Column(name = "sharedGuestNetworkFree")
+    private Long sharedGuestNetworkFree;
+
     @Column(name = "job_id")
     private Long jobId;
 
@@ -449,6 +452,10 @@ public class AccountJoinVO extends BaseViewVO implements InternalIdentity, Ident
 
     public Long getSharedGuestNetworkLimit() {
         return sharedGuestNetworkLimit;
+    }
+
+    public Long getSharedGuestNetworkFree() {
+        return sharedGuestNetworkFree;
     }
 
     public Long getJobId() {
